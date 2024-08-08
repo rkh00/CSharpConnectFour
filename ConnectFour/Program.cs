@@ -5,6 +5,17 @@ class Program {
     private Boolean gameOver = false;
     private Turn? winner;
     private Boolean colFull = false;
+    private static Boolean playAgain() {
+        while (true) {
+            var key = Console.ReadKey(intercept: true);
+
+            if (key.Key == ConsoleKey.Escape) {
+                return false;
+            } else if (key.Key == ConsoleKey.Spacebar) {
+                return true;
+            }
+        }
+    }
 
     public static void Main() {
 
@@ -21,14 +32,28 @@ class Program {
                     Console.WriteLine("Here's the final board:\n\n");
                     Console.Write(board.ToString());
                     Console.ResetColor();
-                    break;
                 } else {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("It's a draw.\n");
+                    Console.WriteLine("\n\nIt's a draw.\n");
                     Console.WriteLine("Here's the final board:\n\n");
                     Console.Write(board.ToString());
                     Console.ResetColor();
+                }
+                Console.WriteLine("Press space to play again.");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Press Esc to exit.");
+                Console.ResetColor();
+
+                Boolean playAgain = Program.playAgain();
+
+                if (playAgain) {
+                    program.gameOver = false;
+                    program.winner = null;
+                    board.InitializeBoard();
+                    continue;
+                } else if (!playAgain) {
                     break;
+
                 }
             }
             Console.WriteLine($"It's {board.turn}'s turn.");
@@ -56,6 +81,7 @@ class Program {
                 break;
             } else if (keyInfo.Key == ConsoleKey.Spacebar) {
                 if (board.DropPiece(board.turn)) {
+                    program.colFull = false;
                     if (board.CheckWin(board.turn)) {
                         program.gameOver = true;
                         program.winner = board.turn;
@@ -77,8 +103,6 @@ class Program {
                 board.SelectedColumn--;
             } else if ((keyInfo.Key == ConsoleKey.RightArrow) && (board.SelectedColumn < board.Columns - 1)) {
                 board.SelectedColumn++;
-            } else {
-                continue;
             }
         }
     }
