@@ -5,6 +5,10 @@ class Program {
     private Boolean gameOver = false;
     private Turn? winner;
     private Boolean colFull = false;
+    private int totalGamesPlayed = 0;
+    private int gamesWonByX = 0;
+
+
     private static Boolean playAgain() {
         while (true) {
             var key = Console.ReadKey(intercept: true);
@@ -26,19 +30,20 @@ class Program {
         while (true) {
             Console.Clear();
             if (program.gameOver) {
+                Console.ForegroundColor = ConsoleColor.Green;
                 if (program.winner is not null) {
-                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"\n\nCongratulations, {program.winner}! You win!\n");
-                    Console.WriteLine("Here's the final board:\n\n");
-                    Console.Write(board.ToString());
-                    Console.ResetColor();
+                    program.totalGamesPlayed++;
+                    if (program.winner == Turn.X) {
+                        program.gamesWonByX++;
+                    }
                 } else {
-                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("\n\nIt's a draw.\n");
-                    Console.WriteLine("Here's the final board:\n\n");
-                    Console.Write(board.ToString());
-                    Console.ResetColor();
                 }
+                Console.WriteLine("Here's the final board:\n\n");
+                Console.Write(board.ToString());
+                Console.ResetColor();
+                Console.WriteLine($"X has won {program.gamesWonByX} game(s). O has won {program.totalGamesPlayed - program.gamesWonByX} game(s).");
                 Console.WriteLine("Press space to play again.");
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Press Esc to exit.");
