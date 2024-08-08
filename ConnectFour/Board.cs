@@ -58,7 +58,16 @@ namespace ConnectFour {
             return builder.ToString();
         }
 
-        public bool CheckWin(Turn turn) {
+        internal bool CheckTie() {
+            for (int row = 0; row < Rows; row++) {
+                for (int col = 0; col < Columns; col++) {
+                    if (grid[row, col] == "[ ]") { return false; }
+                }
+            }
+            return true;
+        }
+
+        internal bool CheckWin(Turn turn) {
             // Check horizontal, vertical, and diagonal wins
             string relevantPiece = $"[{turn.ToString()}]";
             return CheckHorizontalWin(relevantPiece) || CheckVerticalWin(relevantPiece) || CheckDiagonalWin(relevantPiece);

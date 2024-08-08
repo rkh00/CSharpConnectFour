@@ -3,7 +3,8 @@
 class Program {
 
     private Boolean gameOver = false;
-    private Turn winner;
+    private Turn? winner;
+    private Boolean colFull = false;
 
     public static void Main() {
 
@@ -12,13 +13,23 @@ class Program {
         board.InitializeBoard();
 
         while (true) {
+            Console.Clear();
             if (program.gameOver) {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"Congratulations, {board.turn}! You win!\n");
-                Console.WriteLine("Here's the final board:\n\n");
-                Console.Write(board.ToString());
-                Console.ResetColor();
-                break;
+                if (program.winner is not null) {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"\n\nCongratulations, {program.winner}! You win!\n");
+                    Console.WriteLine("Here's the final board:\n\n");
+                    Console.Write(board.ToString());
+                    Console.ResetColor();
+                    break;
+                } else {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("It's a draw.\n");
+                    Console.WriteLine("Here's the final board:\n\n");
+                    Console.Write(board.ToString());
+                    Console.ResetColor();
+                    break;
+                }
             }
             Console.WriteLine($"It's {board.turn}'s turn.");
             Console.WriteLine("Press the left and right arrow keys to move your piece.");
@@ -29,6 +40,12 @@ class Program {
 
             Console.Write(board.DropZone(board.turn));
             Console.Write(board.ToString());
+
+            if (program.colFull) {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("That column is full!");
+                Console.ResetColor();
+            }
 
             // Read a key from the console without displaying it
             var keyInfo = Console.ReadKey(intercept: true);
@@ -41,23 +58,28 @@ class Program {
                 if (board.DropPiece(board.turn)) {
                     if (board.CheckWin(board.turn)) {
                         program.gameOver = true;
+                        program.winner = board.turn;
+                        continue;
+                    } else if (board.CheckTie()) {
+                        program.gameOver = true;
+                        program.winner = null;
                         continue;
                     };
                     board.ChangeTurn();
                     continue;
                 } else {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("That column is full!");
-                    Console.ResetColor();
+                    program.colFull = true;
+                    //Console.ForegroundColor = ConsoleColor.Red;
+                    //Console.WriteLine("That column is full!");
+                    //Console.ResetColor();
                 };
-            } else if ((keyInfo.Key == ConsoleKey.LeftArrow) && (board.SelectedColumn >= 0)) {
+            } else if ((keyInfo.Key == ConsoleKey.LeftArrow) && (board.SelectedColumn > 0)) {
                 board.SelectedColumn--;
             } else if ((keyInfo.Key == ConsoleKey.RightArrow) && (board.SelectedColumn < board.Columns - 1)) {
                 board.SelectedColumn++;
             } else {
                 continue;
             }
-            //}
         }
     }
 }
