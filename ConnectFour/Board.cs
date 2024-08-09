@@ -3,13 +3,15 @@
 namespace ConnectFour {
     internal class Board {
 
-        internal int Rows = 6;
-        internal int Columns = 7;
+        internal int Rows;
+        internal int Columns;
         private String[,] grid;
         internal Turn turn = Turn.X;
         internal int SelectedColumn;
 
-        public Board(Turn turn) {
+        public Board(Turn turn, int rows, int columns) {
+            Rows = rows;
+            Columns = columns;
             grid = new string[Rows, Columns];
             this.turn = turn;
         }
