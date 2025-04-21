@@ -16,20 +16,20 @@ namespace ConnectFour {
             this.turn = turn;
         }
 
-        internal void ChangeTurn() {
-            if (this.turn == Turn.X) {
-                this.turn = Turn.O;
-            } else {
-                this.turn = Turn.X;
-            }
-            SelectedColumn = Columns / 2;
-        }
-
         internal void InitializeBoard() {
             for (int row = 0; row < Rows; row++) {
                 for (int col = 0; col < Columns; col++) {
                     grid[row, col] = "[ ]";
                 }
+            }
+            SelectedColumn = Columns / 2;
+        }
+
+        internal void ChangeTurn() {
+            if (this.turn == Turn.X) {
+                this.turn = Turn.O;
+            } else {
+                this.turn = Turn.X;
             }
             SelectedColumn = Columns / 2;
         }
@@ -72,7 +72,9 @@ namespace ConnectFour {
         internal bool CheckWin(Turn turn) {
             // Check horizontal, vertical, and diagonal wins
             string relevantPiece = $"[{turn.ToString()}]";
-            return CheckHorizontalWin(relevantPiece) || CheckVerticalWin(relevantPiece) || CheckDiagonalWin(relevantPiece);
+            return CheckHorizontalWin(relevantPiece) || 
+                CheckVerticalWin(relevantPiece) || 
+                CheckDiagonalWin(relevantPiece);
         }
 
         private bool CheckHorizontalWin(string relevantPiece) {
